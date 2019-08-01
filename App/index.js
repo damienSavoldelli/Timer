@@ -22,19 +22,43 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 45,
     color: "#89AAFF"
+  },
+  timerText: {
+    fontSize: 90,
+    color:'#FFF',
+    marginBottom:screen.height / 8,
   }
 });
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <TouchableOpacity
-        onPress={() => alert("hello, world!")}
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}>Start</Text>
-      </TouchableOpacity>
-    </View>
-  );
+const formatNumber = (number) => `0${number}`.slice(-2)
+
+const getRemaining = (time) => {
+  const minutes = Math.floor(time / 60);
+  const seconds = time - minutes * 60;
+  return {minutes: formatNumber(minutes), seconds: formatNumber(seconds)}
+}
+
+export default class App extends React.Component {
+  state = {
+    remainingSeconds: 90,
+  };
+
+  render() {
+    const {minutes, seconds} = getRemaining(this.state.remainingSeconds)
+    return (
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" />
+  
+        <Text style={styles.timerText}>{`${minutes}:${seconds}`}</Text>
+  
+        <TouchableOpacity
+          onPress={() => alert("hello, world!")}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>Start</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
 }
