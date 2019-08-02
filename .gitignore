@@ -9,4 +9,9 @@ npm-debug.*
 *.orig.*
 web-build/
 web-report/
+
+# dependencies
 node_modules/
+
+# OSX
+.DS_Store
