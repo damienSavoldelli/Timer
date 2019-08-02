@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, StatusBar, TouchableOpacity, Dimensions, Picker, Platform} from 'react-native';
+import { StyleSheet, Text, View, StatusBar, TouchableOpacity, Dimensions, Picker, Platform, Vibration} from 'react-native';
 
 const screen = Dimensions.get("window");
 
@@ -74,6 +74,7 @@ const createArray = length => {
 
 const AVAILABLE_MINUTES = createArray(10);
 const AVAILABLE_SECONDS = createArray(60);
+const VIBRATION_DURATION = 5000;
 
 export default class App extends React.Component {
   state = {
@@ -87,6 +88,7 @@ export default class App extends React.Component {
 
   componentDidUpdate(prevProp, prevState) {
     if (this.state.remainingSeconds === 0 && prevState.remainingSeconds !== 0) {
+      Vibration.vibrate(VIBRATION_DURATION);
       this.stop();
     }
   }
