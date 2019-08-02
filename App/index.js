@@ -73,12 +73,14 @@ const createArray = length => {
 }
 
 const AVAILABLE_MINUTES = createArray(10);
-const AVAILABLE_SECONDS = createArray(60)
+const AVAILABLE_SECONDS = createArray(60);
 
 export default class App extends React.Component {
   state = {
     remainingSeconds: 5,
-    isRunning: false
+    isRunning: false,
+    selectedMinutes: "0",
+    selectedSeconds: "5"
   };
 
   interval = null;
@@ -97,8 +99,10 @@ export default class App extends React.Component {
 
   start = () => {
     this.setState(state => ({
-      remainingSeconds: state.remainingSeconds - 1,
-      isRunning: true
+      remainingSeconds: parseInt(state.selectedMinutes, 10) * 60 + parseInt(state.selectedSeconds, 10),
+      isRunning: true,
+      selectedMinutes: "0",
+      selectedSeconds: "5"
     }));
 
     this.interval = setInterval(() => {
@@ -122,10 +126,10 @@ export default class App extends React.Component {
       <Picker
         style={styles.picker}
         itemStyle={styles.pickerItem}
-        selectedValue="5"
+        selectedValue={this.state.selectedMinutes}
         onValueChange={itemValue => {
-
-          }}
+          this.setState({selectedMinutes: itemValue});
+        }}
       >
         {AVAILABLE_MINUTES.map(value => (
           <Picker.Item key={value} label={value} value={value} />
@@ -136,10 +140,10 @@ export default class App extends React.Component {
       <Picker
         style={styles.picker}
         itemStyle={styles.pickerItem}
-        selectedValue="5"
+        selectedValue={this.state.selectedSeconds}
         onValueChange={itemValue => {
-
-          }}
+          this.setState({selectedSeconds: itemValue});
+        }}
       >
         {AVAILABLE_SECONDS.map(value => (
           <Picker.Item key={value} label={value} value={value} />
