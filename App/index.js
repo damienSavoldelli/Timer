@@ -36,13 +36,13 @@ const styles = StyleSheet.create({
   }
 });
 
-const formatNumber = (number) => `0${number}`.slice(-2)
+const formatNumber = number => `0${number}`.slice(-2);
 
-const getRemaining = (time) => {
+const getRemaining = time => {
   const minutes = Math.floor(time / 60);
   const seconds = time - minutes * 60;
-  return {minutes: formatNumber(minutes), seconds: formatNumber(seconds)}
-}
+  return { minutes: formatNumber(minutes), seconds: formatNumber(seconds) };
+};
 
 export default class App extends React.Component {
   state = {
@@ -52,15 +52,15 @@ export default class App extends React.Component {
 
   interval = null;
 
-  componentDidUpdate(prevProp, prevSate) {
-    if (this.state.remainingSeconds === 0 && prevSate.remainingSeconds !== 0) {
+  componentDidUpdate(prevProp, prevState) {
+    if (this.state.remainingSeconds === 0 && prevState.remainingSeconds !== 0) {
       this.stop();
     }
   }
 
   componentWillUnmount() {
     if (this.interval) {
-      clearInterval(this.interval)
+      clearInterval(this.interval);
     }
   }
 
@@ -68,46 +68,44 @@ export default class App extends React.Component {
     this.setState(state => ({
       remainingSeconds: state.remainingSeconds - 1,
       isRunning: true
-    }))
+    }));
 
     this.interval = setInterval(() => {
       this.setState(state => ({
         remainingSeconds: state.remainingSeconds - 1
-      }))
-      console.log(this.state.remainingSeconds)
-    }, 1000)
-  }
+      }));
+    }, 1000);
+  };
 
   stop = () => {
     clearInterval(this.interval);
     this.interval = null;
-    this.setState({ remainingSeconds: 5, isRunning: false })
-  }
+    this.setState({
+      remainingSeconds: 5,
+      isRunning: false
+    });
+  };
 
   render() {
-    const {minutes, seconds} = getRemaining(this.state.remainingSeconds)
+    const { minutes, seconds } = getRemaining(this.state.remainingSeconds);
+
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
-  
         <Text style={styles.timerText}>{`${minutes}:${seconds}`}</Text>
         {this.state.isRunning ? (
           <TouchableOpacity
-            onPress={this.start}
+            onPress={this.stop}
             style={[styles.button, styles.buttonStop]}
           >
             <Text style={[styles.buttonText, styles.buttonTextStop]}>Stop</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity
-            onPress={this.start}
-            style={styles.button}
-          >
+          <TouchableOpacity onPress={this.start} style={styles.button}>
             <Text style={styles.buttonText}>Start</Text>
           </TouchableOpacity>
         )}
       </View>
     );
   }
-
 }
