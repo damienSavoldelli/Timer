@@ -2,13 +2,10 @@
   "expo": {
     "name": "Timer2",
     "slug": "Timer2",
+    "description": "A Timer based on https://learn.handlebarlabs.com/p/react-native-by-example",
     "privacy": "public",
     "sdkVersion": "34.0.0",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -20,9 +17,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     }
