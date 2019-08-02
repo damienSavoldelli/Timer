@@ -19,9 +19,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center"
   },
+  buttonStop: {
+    borderColor : "#FF851B"
+  },
   buttonText: {
     fontSize: 45,
     color: "#89AAFF"
+  },
+  buttonTextStop: {
+    color: "#FF851B"
   },
   timerText: {
     fontSize: 90,
@@ -40,8 +46,43 @@ const getRemaining = (time) => {
 
 export default class App extends React.Component {
   state = {
-    remainingSeconds: 90,
+    remainingSeconds: 5,
+    isRunning: false
   };
+
+  interval = null;
+
+  componentDidUpdate(prevProp, prevSate) {
+    if (this.state.remainingSeconds === 0 && prevSate.remainingSeconds !== 0) {
+      this.stop();
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.interval) {
+      clearInterval(this.interval)
+    }
+  }
+
+  start = () => {
+    this.setState(state => ({
+      remainingSeconds: state.remainingSeconds - 1,
+      isRunning: true
+    }))
+
+    this.interval = setInterval(() => {
+      this.setState(state => ({
+        remainingSeconds: state.remainingSeconds - 1
+      }))
+      console.log(this.state.remainingSeconds)
+    }, 1000)
+  }
+
+  stop = () => {
+    clearInterval(this.interval);
+    this.interval = null;
+    this.setState({ remainingSeconds: 5, isRunning: false })
+  }
 
   render() {
     const {minutes, seconds} = getRemaining(this.state.remainingSeconds)
@@ -50,13 +91,21 @@ export default class App extends React.Component {
         <StatusBar barStyle="light-content" />
   
         <Text style={styles.timerText}>{`${minutes}:${seconds}`}</Text>
-  
-        <TouchableOpacity
-          onPress={() => alert("hello, world!")}
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>Start</Text>
-        </TouchableOpacity>
+        {this.state.isRunning ? (
+          <TouchableOpacity
+            onPress={this.start}
+            style={[styles.button, styles.buttonStop]}
+          >
+            <Text style={[styles.buttonText, styles.buttonTextStop]}>Stop</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={this.start}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Start</Text>
+          </TouchableOpacity>
+        )}
       </View>
     );
   }
