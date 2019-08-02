@@ -1,7 +1,20 @@
 import React from 'react';
-import { StyleSheet, Text, View, StatusBar, TouchableOpacity, Dimensions, Picker, Platform, Vibration} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  StatusBar,
+  TouchableOpacity,
+  Dimensions,
+  Picker,
+  Platform,
+  Vibration
+} from "react-native";
+import { Audio } from 'expo-av';
 
 const screen = Dimensions.get("window");
+
+const soundObject = new Audio.Sound();
 
 const styles = StyleSheet.create({
   container: {
@@ -16,6 +29,7 @@ const styles = StyleSheet.create({
     width: screen.width / 2,
     height: screen.width / 2,
     borderRadius: screen.width / 2,
+    marginTop:screen.height / 8,
     alignItems: "center",
     justifyContent: "center"
   },
@@ -32,7 +46,6 @@ const styles = StyleSheet.create({
   timerText: {
     fontSize: 90,
     color:'#FFF',
-    marginBottom:screen.height / 8,
   },
   picker: {
     width: 50,
@@ -46,7 +59,7 @@ const styles = StyleSheet.create({
   },
   pickerItem: {
     color: "#fff",
-    fontSize: 20
+    fontSize: 23
   },
   pickerContainer: {
     flexDirection: "row",
@@ -74,7 +87,7 @@ const createArray = length => {
 
 const AVAILABLE_MINUTES = createArray(10);
 const AVAILABLE_SECONDS = createArray(60);
-const VIBRATION_DURATION = 5000;
+const VIBRATION_DURATION = 3000;
 
 export default class App extends React.Component {
   state = {
@@ -86,18 +99,23 @@ export default class App extends React.Component {
 
   interval = null;
 
+  componentDidMount() {
+    this._loadAudio();
+  }
+
   componentDidUpdate(prevProp, prevState) {
     if (this.state.remainingSeconds === 0 && prevState.remainingSeconds !== 0) {
       Vibration.vibrate(VIBRATION_DURATION);
+      this._playAudio();
       this.stop();
     }
-  }
+  };
 
   componentWillUnmount() {
     if (this.interval) {
       clearInterval(this.interval);
     }
-  }
+  };
 
   start = () => {
     this.setState(state => ({
@@ -121,6 +139,15 @@ export default class App extends React.Component {
       remainingSeconds: 5,
       isRunning: false
     });
+  };
+
+
+  _loadAudio = () => {
+    soundObject.loadAsync(require('../assets/electric-blues-piano-ident.mp3'));
+  };
+
+  _playAudio = () => {
+    soundObject.playAsync();
   };
 
   renderPickers = () => (
